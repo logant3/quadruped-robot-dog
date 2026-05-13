@@ -72,7 +72,7 @@
          Increase this later to test heavier body loads. -->
     <inertial>
       <origin xyz="0 -0.24655 0.21" rpy="0 0 0"/>
-      <mass value="2.0"/>
+      <mass value="3.0"/>
       <inertia
         ixx="0.015"
         ixy="0.0"

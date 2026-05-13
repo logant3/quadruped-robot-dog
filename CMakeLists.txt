@@ -19,6 +19,7 @@ install(
     scripts/log_joint_response.py
     scripts/ik_foot_pose.py
     scripts/ground_bounce_ik.py
+    scripts/loaded_leg_validation.py
   DESTINATION lib/${PROJECT_NAME}
 )
 if(BUILD_TESTING)
