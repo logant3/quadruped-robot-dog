@@ -5,22 +5,68 @@
   <xacro:include filename="$(find robot_dog_description)/xacro/materials.xacro"/>
   <xacro:include filename="$(find robot_dog_description)/xacro/leg.xacro"/>
 
+  <!--
+    Single-leg Gazebo/RViz test setup.
+
+    This is not the final robot body.
+    It is a temporary fixed test stand so the single leg can be tested
+    in Gazebo before building the full four-leg robot.
+  -->
+
+  <!-- World reference link for fixed-base Gazebo testing -->
+  <link name="world"/>
+
   <!-- Ground/reference frame -->
   <link name="base_footprint"/>
 
-  <!-- Invisible body frame. No visual box, so it will not intersect the leg. -->
+  <joint name="world_to_base_footprint" type="fixed">
+    <parent link="world"/>
+    <child link="base_footprint"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Temporary test stand / base fixture -->
   <link name="base_link">
+
+    <!-- Visible test stand block.
+         The front face of this gray box should sit approximately flush
+         with the back face of the fixed black actuator.
+
+         Measured STEP width from actuator back to shroud front:
+         127.15 mm = 0.12715 m
+
+         With box y-thickness = 0.08 m:
+         front face y = -0.24655 + 0.04 = -0.20655 m
+    -->
+    <visual>
+      <origin xyz="0 -0.24655 0.15" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.24 0.08 0.30"/>
+      </geometry>
+      <material name="body_gray"/>
+    </visual>
+
+    <!-- Simple collision for test stand -->
+    <collision>
+      <origin xyz="0 -0.24655 0.15" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.24 0.08 0.30"/>
+      </geometry>
+    </collision>
+
+    <!-- Approximate inertial values for fixed test stand -->
     <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <mass value="2.0"/>
+      <origin xyz="0 -0.24655 0.15" rpy="0 0 0"/>
+      <mass value="5.0"/>
       <inertia
-        ixx="0.005"
+        ixx="0.015"
         ixy="0.0"
         ixz="0.0"
-        iyy="0.015"
+        iyy="0.020"
         iyz="0.0"
-        izz="0.018"/>
+        izz="0.020"/>
     </inertial>
+
   </link>
 
   <joint name="base_footprint_joint" type="fixed">
@@ -29,12 +75,12 @@
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </joint>
 
-  <!-- Single front-right test leg -->
+  <!-- Single front-right test leg mounted to the test stand -->
   <xacro:simple_leg
     prefix="front_right"
     parent="base_link"
     x="0.08"
-    y="-0.06"
-    z="0.04"/>
+    y="-0.10"
+    z="0.24"/>
 
 </robot>
