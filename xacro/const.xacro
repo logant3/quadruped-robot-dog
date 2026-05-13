@@ -17,12 +17,28 @@
   <xacro:property name="lower_leg_width" value="0.030"/>
   <xacro:property name="lower_leg_depth" value="0.025"/>
 
-  <!-- Wide RViz-only visualization joint limits.
-       These are not final physical robot limits. -->
-  <xacro:property name="hip_lower_limit" value="-3.14159"/>
-  <xacro:property name="hip_upper_limit" value="3.14159"/>
-  <xacro:property name="knee_lower_limit" value="-.85"/>
-  <xacro:property name="knee_upper_limit" value="3.95"/>
+    <!-- Home-relative joint limits.
+       New Gazebo/URDF zero pose is the powered home/squat pose.
+
+       Hip:
+       Old absolute hip limits were about +/-3.14159 rad.
+       Old home hip was +1.03 rad.
+       New home-relative limits:
+       lower = -3.14159 - 1.03 = -4.17159
+       upper = +3.14159 - 1.03 = +2.11159
+
+       Knee:
+       Old safe/contact knee range was about -0.80 to +3.90 rad.
+       Old home knee was -0.669 rad.
+       New home-relative limits:
+       lower = -0.80 - (-0.669) = -0.131
+       upper = +3.90 - (-0.669) = +4.569
+  -->
+  <xacro:property name="hip_lower_limit" value="-4.17159"/>
+  <xacro:property name="hip_upper_limit" value="2.11159"/>
+
+  <xacro:property name="knee_lower_limit" value="-0.131"/>
+  <xacro:property name="knee_upper_limit" value="4.569"/>
   
   <!-- Actuator/joint effort limits based on RobStride 02 specs.
      Hip is direct actuator output.

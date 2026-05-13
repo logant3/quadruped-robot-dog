@@ -136,15 +136,13 @@
         <material name="pulley_orange"/>
       </visual>
 
-                       <!-- Simplified upper-leg side rail collisions.
+      <!-- Simplified upper-leg side rail collisions.
            These represent the straight thigh panel areas only.
-           Extended slightly after checking the STEP geometry.
-           The lower cylindrical support/contact center is about 46.125 mm
-           above the bottom of the thigh panel. -->
+           The 29 mm gap above the lower support cylinder is preserved. -->
 
       <!-- Left/outer thigh side rail collision -->
       <collision>
-        <origin xyz="-0.014000 0.071150 -0.0806000" rpy="0 0 0"/>
+        <origin xyz="-0.014000 0.071150 -0.080600" rpy="0 0 0"/>
         <geometry>
           <box size="0.008 0.018 0.074"/>
         </geometry>
@@ -152,7 +150,7 @@
 
       <!-- Right/inner thigh side rail collision -->
       <collision>
-        <origin xyz="0.014000 0.071150 -0.0806000" rpy="0 0 0"/>
+        <origin xyz="0.014000 0.071150 -0.080600" rpy="0 0 0"/>
         <geometry>
           <box size="0.008 0.018 0.074"/>
         </geometry>
@@ -170,7 +168,7 @@
 
       <!-- Approximate inertial values for upper leg assembly -->
       <inertial>
-        <origin xyz="-0.000015 0.071150 -0.10500" rpy="0 0 0"/>
+        <origin xyz="-0.000015 0.071150 -0.105000" rpy="0 0 0"/>
         <mass value="0.9"/>
         <inertia
           ixx="0.004"
@@ -187,11 +185,16 @@
       Hip joint:
       Origin is placed on the fixed actuator shaft centerline.
       Axis is Y because the actuator shaft line maps to the URDF Y direction.
+
+      IMPORTANT HOME CONVENTION:
+      Old squat/home command was hip = +1.03 rad.
+      This offset is now baked into the joint origin so Gazebo/URDF joint
+      value 0.0 starts at the powered home/squat pose.
     -->
     <joint name="${prefix}_hip_joint" type="revolute">
       <parent link="${prefix}_hip_motor_fixed"/>
       <child link="${prefix}_upper_leg"/>
-      <origin xyz="0.000118 -0.065148 0.010078" rpy="0 0 0"/>
+      <origin xyz="0.000118 -0.065148 0.010078" rpy="0 1.03 0"/>
       <axis xyz="0 1 0"/>
       <limit lower="${hip_lower_limit}" upper="${hip_upper_limit}" effort="${hip_effort_limit}" velocity="${hip_velocity_limit}"/>
     </joint>
@@ -263,13 +266,20 @@
 
     <!--
       Knee joint:
-      Same STEP-derived placement as before, shifted into the new
+      Same STEP-derived placement as before, shifted into the
       hip-joint-centered upper-leg frame.
+
+      IMPORTANT HOME CONVENTION:
+      Old knee origin pitch was -1.570796.
+      Old squat/home command was knee = -0.669 rad.
+      New pitch = -1.570796 + (-0.669) = -2.239796.
+      This offset is now baked into the joint origin so Gazebo/URDF joint
+      value 0.0 starts at the powered home/squat pose.
     -->
     <joint name="${prefix}_knee_joint" type="revolute">
       <parent link="${prefix}_upper_leg"/>
       <child link="${prefix}_lower_leg"/>
-      <origin xyz="-0.000118 0.071450 -0.187578" rpy="0 -1.570796 0"/>
+      <origin xyz="-0.000118 0.071450 -0.187578" rpy="0 -2.239796 0"/>
       <axis xyz="0 1 0"/>
       <limit lower="${knee_lower_limit}" upper="${knee_upper_limit}" effort="${knee_effort_limit}" velocity="${knee_velocity_limit}"/>
     </joint>

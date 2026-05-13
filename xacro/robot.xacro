@@ -5,60 +5,74 @@
   <xacro:include filename="$(find robot_dog_description)/xacro/materials.xacro"/>
   <xacro:include filename="$(find robot_dog_description)/xacro/leg.xacro"/>
   <xacro:include filename="$(find robot_dog_description)/xacro/ros2_control.xacro"/>
-  
+
   <!--
-    Single-leg Gazebo/RViz test setup.
+    Single-leg Gazebo ground/load test setup.
 
     This is not the final robot body.
-    It is a temporary fixed test stand so the single leg can be tested
-    in Gazebo before building the full four-leg robot.
+    The gray stand acts like a vertical rail carriage:
+    it can move only up/down so the leg can push against the ground
+    and lift/load the body without the whole model tipping over.
   -->
 
-  <!-- World reference link for fixed-base Gazebo testing -->
+  <!-- Fixed world reference -->
   <link name="world"/>
 
-  <!-- Ground/reference frame -->
-  <link name="base_footprint"/>
+  <!-- Sliding carriage reference frame -->
+  <link name="base_footprint">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.01"/>
+      <inertia
+        ixx="0.00001"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="0.00001"
+        iyz="0.0"
+        izz="0.00001"/>
+    </inertial>
+  </link>
 
-  <joint name="world_to_base_footprint" type="fixed">
+  <!--
+    Vertical rail joint:
+    Allows the whole stand/leg assembly to slide only along Z.
+    This lets the leg push the body upward under ground contact.
+  -->
+  <joint name="vertical_rail_joint" type="prismatic">
     <parent link="world"/>
     <child link="base_footprint"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-0.08" upper="0.60" effort="1000.0" velocity="5.0"/>
+    <dynamics damping="3.0" friction="0.2"/>
   </joint>
 
-  <!-- Temporary test stand / base fixture -->
+  <!-- Temporary test stand / body carriage -->
   <link name="base_link">
 
     <!-- Visible test stand block.
-         The front face of this gray box should sit approximately flush
-         with the back face of the fixed black actuator.
-
-         Measured STEP width from actuator back to shroud front:
-         127.15 mm = 0.12715 m
-
-         With box y-thickness = 0.08 m:
-         front face y = -0.24655 + 0.04 = -0.20655 m
-    -->
+         Front face is approximately flush with the back face of the fixed actuator. -->
     <visual>
-      <origin xyz="0 -0.24655 0.15" rpy="0 0 0"/>
+      <origin xyz="0 -0.24655 0.21" rpy="0 0 0"/>
       <geometry>
-        <box size="0.24 0.08 0.30"/>
+        <box size="0.24 0.08 0.18"/>
       </geometry>
       <material name="body_gray"/>
     </visual>
 
     <!-- Simple collision for test stand -->
     <collision>
-      <origin xyz="0 -0.24655 0.15" rpy="0 0 0"/>
+      <origin xyz="0 -0.24655 0.21" rpy="0 0 0"/>
       <geometry>
-        <box size="0.24 0.08 0.30"/>
+        <box size="0.24 0.08 0.18"/>
       </geometry>
     </collision>
 
-    <!-- Approximate inertial values for fixed test stand -->
+    <!-- Approximate loaded carriage/body mass.
+         Increase this later to test heavier body loads. -->
     <inertial>
-      <origin xyz="0 -0.24655 0.15" rpy="0 0 0"/>
-      <mass value="5.0"/>
+      <origin xyz="0 -0.24655 0.21" rpy="0 0 0"/>
+      <mass value="2.0"/>
       <inertia
         ixx="0.015"
         ixy="0.0"
@@ -76,14 +90,15 @@
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </joint>
 
-  <!-- Single front-right test leg mounted to the test stand -->
+  <!-- Single front-right test leg mounted to the vertical sliding stand.
+       Current leg zero pose is the home/squat pose. -->
   <xacro:simple_leg
     prefix="front_right"
     parent="base_link"
     x="0.08"
     y="-0.10"
-    z="0.24"/>
-    
+    z="0.1545"/>
+
   <!-- ROS 2 control interface for Gazebo-controlled single leg -->
   <xacro:single_leg_ros2_control name="GazeboSimSystem"/>
 

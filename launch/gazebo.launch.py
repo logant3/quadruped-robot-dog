@@ -56,7 +56,10 @@ def generate_launch_description():
             "-name", "robot_dog_single_leg",
             "-x", "0",
             "-y", "0",
-            "-z", "1.0"
+            "-z", "0"
+            
+            
+           
         ],
         output="screen"
     )
