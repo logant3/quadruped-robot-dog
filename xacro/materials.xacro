@@ -1,20 +1,36 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-<material name="body_gray">
-  <color rgba="1.0 0.0 0.0 1.0"/>
-</material>
-
-  <material name="leg_dark">
-    <color rgba="0.10 0.10 0.10 1.0"/>
+  <material name="body_gray">
+    <color rgba="0.45 0.45 0.45 1.0"/>
   </material>
 
-  <material name="joint_black">
+  <material name="actuator_black">
     <color rgba="0.02 0.02 0.02 1.0"/>
   </material>
 
-  <material name="foot_blue">
-    <color rgba="0.05 0.15 0.80 1.0"/>
+  <material name="upper_leg_blue">
+    <color rgba="0.05 0.20 0.85 1.0"/>
+  </material>
+
+  <material name="lower_leg_green">
+    <color rgba="0.05 0.65 0.20 1.0"/>
+  </material>
+
+  <material name="pulley_orange">
+    <color rgba="1.0 0.45 0.05 1.0"/>
+  </material>
+
+  <material name="pin_yellow">
+    <color rgba="1.0 0.85 0.05 1.0"/>
+  </material>
+
+  <material name="shroud_purple">
+    <color rgba="0.45 0.10 0.80 1.0"/>
+  </material>
+
+  <material name="foot_red">
+    <color rgba="0.90 0.05 0.05 1.0"/>
   </material>
 
 </robot>

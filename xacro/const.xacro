@@ -10,17 +10,26 @@
   <xacro:property name="body_length" value="0.30"/>
   <xacro:property name="body_width" value="0.12"/>
   <xacro:property name="body_height" value="0.08"/>
-  
+
   <!-- Simple collision thicknesses -->
   <xacro:property name="upper_leg_width" value="0.035"/>
   <xacro:property name="upper_leg_depth" value="0.030"/>
   <xacro:property name="lower_leg_width" value="0.030"/>
   <xacro:property name="lower_leg_depth" value="0.025"/>
 
-  
-  <!-- Wide RViz-only visualization joint limits -->
+  <!-- Wide RViz-only visualization joint limits.
+       These are not final physical robot limits. -->
   <xacro:property name="hip_lower_limit" value="-3.14159"/>
   <xacro:property name="hip_upper_limit" value="3.14159"/>
-  <xacro:property name="knee_lower_limit" value="-3.14159"/>
-  <xacro:property name="knee_upper_limit" value="3.14159"/>
+  <xacro:property name="knee_lower_limit" value="-.85"/>
+  <xacro:property name="knee_upper_limit" value="3.95"/>
+
+  <!-- Current knee angle convention:
+       knee_joint = 0 rad is the original CAD/STEP bent pose.
+       knee_joint = +1.570796 rad is approximately the straight-leg pose.
+       Future real-robot angle conversion should use this offset instead
+       of changing mesh origins.
+  -->
+  <xacro:property name="knee_straight_angle" value="1.570796"/>
+
 </robot>
