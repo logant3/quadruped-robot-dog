@@ -13,7 +13,9 @@ install(
 )
 
 install(
-  PROGRAMS scripts/send_leg_pose.py
+  PROGRAMS
+    scripts/send_leg_pose.py
+    scripts/test_leg_motion.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
