@@ -20,6 +20,7 @@ install(
     scripts/ik_foot_pose.py
     scripts/ground_bounce_ik.py
     scripts/loaded_leg_validation.py
+    scripts/loaded_leg_cycle_test.py
   DESTINATION lib/${PROJECT_NAME}
 )
 if(BUILD_TESTING)
