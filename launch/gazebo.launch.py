@@ -15,7 +15,6 @@ def generate_launch_description():
     xacro_file = os.path.join(pkg_share, "xacro", "robot.xacro")
     world_file = os.path.join(pkg_share, "worlds", "single_leg_empty.world")
 
-    # Let Gazebo find package://robot_dog_description/... mesh paths.
     set_gz_resource_path = SetEnvironmentVariable(
         name="GZ_SIM_RESOURCE_PATH",
         value=os.path.join(pkg_share, "..")
@@ -35,7 +34,6 @@ def generate_launch_description():
             )
         ),
         launch_arguments={
-            # No -r here, so Gazebo starts paused.
             "gz_args": world_file
         }.items()
     )
@@ -63,12 +61,43 @@ def generate_launch_description():
         output="screen"
     )
 
+    joint_state_broadcaster_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            "joint_state_broadcaster",
+            "--controller-manager",
+            "/controller_manager"
+        ],
+        output="screen"
+    )
+
+    leg_controller_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            "front_right_leg_controller",
+            "--controller-manager",
+            "/controller_manager"
+        ],
+        output="screen"
+    )
+
     return LaunchDescription([
         set_gz_resource_path,
         gazebo,
         robot_state_publisher,
+
         TimerAction(
             period=2.0,
             actions=[spawn_robot]
+        ),
+
+        TimerAction(
+            period=6.0,
+            actions=[
+                joint_state_broadcaster_spawner,
+                leg_controller_spawner
+            ]
         ),
     ])

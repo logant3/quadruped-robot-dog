@@ -23,6 +23,19 @@
   <xacro:property name="hip_upper_limit" value="3.14159"/>
   <xacro:property name="knee_lower_limit" value="-.85"/>
   <xacro:property name="knee_upper_limit" value="3.95"/>
+  
+  <!-- Actuator/joint effort limits based on RobStride 02 specs.
+     Hip is direct actuator output.
+     Knee uses 30T/20T belt ratio, so torque is multiplied by 1.5.
+       -->
+       
+  <xacro:property name="hip_effort_limit" value="17.0"/>
+  <xacro:property name="knee_effort_limit" value="25.5"/>
+
+  <!-- Conservative first-pass velocity limits for Gazebo control.
+       These are lower than actuator max speed to keep first control tests stable. -->
+  <xacro:property name="hip_velocity_limit" value="10.0"/>
+  <xacro:property name="knee_velocity_limit" value="10.0"/>
 
   <!-- Current knee angle convention:
        knee_joint = 0 rad is the original CAD/STEP bent pose.

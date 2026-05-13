@@ -4,7 +4,8 @@
   <xacro:include filename="$(find robot_dog_description)/xacro/const.xacro"/>
   <xacro:include filename="$(find robot_dog_description)/xacro/materials.xacro"/>
   <xacro:include filename="$(find robot_dog_description)/xacro/leg.xacro"/>
-
+  <xacro:include filename="$(find robot_dog_description)/xacro/ros2_control.xacro"/>
+  
   <!--
     Single-leg Gazebo/RViz test setup.
 
@@ -82,5 +83,15 @@
     x="0.08"
     y="-0.10"
     z="0.24"/>
+    
+  <!-- ROS 2 control interface for Gazebo-controlled single leg -->
+  <xacro:single_leg_ros2_control name="GazeboSimSystem"/>
+
+  <!-- Gazebo ros2_control plugin -->
+  <gazebo>
+    <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(find robot_dog_description)/config/controllers.yaml</parameters>
+    </plugin>
+  </gazebo>
 
 </robot>

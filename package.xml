@@ -3,7 +3,7 @@
 <package format="3">
   <name>robot_dog_description</name>
   <version>0.0.0</version>
-  <description>Robot dog description package containing Xacro, meshes, launch files, RViz config, and robot model files.</description>
+  <description>Robot dog description package containing Xacro, meshes, launch files, RViz config, Gazebo config, and robot model files.</description>
 
   <maintainer email="logan@todo.todo">logan</maintainer>
   <license>BSD-3-Clause</license>
@@ -14,6 +14,13 @@
   <depend>robot_state_publisher</depend>
   <depend>joint_state_publisher_gui</depend>
   <depend>rviz2</depend>
+
+  <depend>ros_gz_sim</depend>
+  <depend>gz_ros2_control</depend>
+  <depend>controller_manager</depend>
+  <depend>joint_state_broadcaster</depend>
+  <depend>joint_trajectory_controller</depend>
+  <depend>trajectory_msgs</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
