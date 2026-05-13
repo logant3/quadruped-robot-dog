@@ -1,7 +1,7 @@
 import os
 
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, TimerAction, SetEnvironmentVariable
+from launch.actions import IncludeLaunchDescription, TimerAction, SetEnvironmentVariable, ExecuteProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command
 from launch_ros.actions import Node
@@ -83,6 +83,16 @@ def generate_launch_description():
         output="screen"
     )
 
+    activate_controllers = ExecuteProcess(
+        cmd=[
+            "ros2", "control", "switch_controllers",
+            "--activate",
+            "joint_state_broadcaster",
+            "front_right_leg_controller"
+        ],
+        output="screen"
+    )
+
     return LaunchDescription([
         set_gz_resource_path,
         gazebo,
@@ -94,10 +104,15 @@ def generate_launch_description():
         ),
 
         TimerAction(
-            period=6.0,
+            period=5.0,
             actions=[
                 joint_state_broadcaster_spawner,
                 leg_controller_spawner
             ]
+        ),
+
+        TimerAction(
+            period=12.0,
+            actions=[activate_controllers]
         ),
     ])
