@@ -1,0 +1,247 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="simple_leg" params="prefix parent x y z">
+
+    <!-- ========================================================= -->
+    <!-- Upper leg link                                            -->
+    <!-- Reference: male thigh panel is the upper-leg reference.   -->
+    <!-- ========================================================= -->
+
+    <link name="${prefix}_upper_leg">
+
+      <!-- Male thigh panel -->
+      <visual>
+        <origin xyz="-0.190 -0.005 0.0375" rpy="0 0 0"/>
+        <geometry>
+          <mesh
+            filename="package://robot_dog_description/meshes/Thigh_Panel_Male_V2.stl"
+            scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="leg_dark"/>
+      </visual>
+
+      <!-- Female thigh panel: STEP-derived relative placement from male panel -->
+      <visual>
+        <origin xyz="0.125206 0.020602 0.0375" rpy="0 0 3.141593"/>
+        <geometry>
+          <mesh
+            filename="package://robot_dog_description/meshes/Thigh_Panel_Female_V2.stl"
+            scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="leg_dark"/>
+      </visual>
+
+      <!-- Hip shroud -->
+      <visual>
+        <origin xyz="-0.124836 -0.008607 -0.012530" rpy="0 0 0"/>
+        <geometry>
+          <mesh
+            filename="package://robot_dog_description/meshes/Hip_Shroud_V1.stl"
+            scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="joint_black"/>
+      </visual>
+
+      <!-- RobStride actuator 1 -->
+      <visual>
+        <origin xyz="-0.087642 -0.012748 0.012079" rpy="-1.570796 0 0"/>
+        <geometry>
+          <mesh
+            filename="package://robot_dog_description/meshes/RobStride02_Actuator.stl"
+            scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="joint_black"/>
+      </visual>
+
+      <!-- RobStride actuator 2 -->
+      <visual>
+        <origin xyz="-0.076951 -0.065148 -0.031931" rpy="-1.570796 -0.523599 0"/>
+        <geometry>
+          <mesh
+            filename="package://robot_dog_description/meshes/RobStride02_Actuator.stl"
+            scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="joint_black"/>
+      </visual>
+
+      <!-- Thigh pulley mount -->
+      <visual>
+        <origin xyz="-0.087631 -0.012748 0.012260" rpy="-1.570796 0 0"/>
+        <geometry>
+          <mesh
+            filename="package://robot_dog_description/meshes/Thigh_Pulley_Mount_V1.stl"
+            scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="joint_black"/>
+      </visual>
+
+      <!-- 20T motor pulley -->
+      <visual>
+        <origin xyz="0.000106 -0.001248 0.009949" rpy="0 0 0"/>
+        <geometry>
+          <mesh
+            filename="package://robot_dog_description/meshes/20T_Pulley_Dimensions.stl"
+            scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="joint_black"/>
+      </visual>
+
+      <!-- Simple collision box for upper-leg physics/debugging -->
+      <collision>
+        <origin xyz="0 0 ${-upper_leg_length/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${upper_leg_width} ${upper_leg_depth} ${upper_leg_length}"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <origin xyz="0 0 ${-upper_leg_length/2}" rpy="0 0 0"/>
+        <mass value="0.9"/>
+        <inertia
+          ixx="0.004"
+          ixy="0.0"
+          ixz="0.0"
+          iyy="0.004"
+          iyz="0.0"
+          izz="0.001"/>
+      </inertial>
+
+    </link>
+
+    <!-- Hip joint -->
+    <joint name="${prefix}_hip_joint" type="revolute">
+      <parent link="${parent}"/>
+      <child link="${prefix}_upper_leg"/>
+      <origin xyz="${x} ${y} ${z}" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="${hip_lower_limit}" upper="${hip_upper_limit}" effort="20.0" velocity="10.0"/>
+    </joint>
+
+
+    <!-- ========================================================= -->
+    <!-- Lower leg link                                            -->
+    <!-- Lower leg, 30T pulley, and knee pin are aligned together. -->
+    <!-- Their relative placements match the STEP assembly.        -->
+    <!-- ========================================================= -->
+
+    <link name="${prefix}_lower_leg">
+
+      <!-- Lower leg main part -->
+      <visual>
+        <origin xyz="0 0.007 0" rpy="3.141593 0 0"/>
+        <geometry>
+          <mesh
+            filename="package://robot_dog_description/meshes/Lower_Leg_V1.stl"
+            scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="leg_dark"/>
+      </visual>
+
+      <!-- 30T knee pulley: STEP-derived relative to lower leg -->
+      <visual>
+        <origin xyz="0 0.006800 -0.050000" rpy="3.141593 0 0"/>
+        <geometry>
+          <mesh
+            filename="package://robot_dog_description/meshes/30T_Pulley_Dimension.stl"
+            scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="joint_black"/>
+      </visual>
+
+      <!-- Knee pin: STEP-derived relative to lower leg -->
+      <visual>
+        <origin xyz="0.093000 -0.011700 0.038000" rpy="0 1.570796 0"/>
+        <geometry>
+          <mesh
+            filename="package://robot_dog_description/meshes/Knee_Pin_V1.stl"
+            scale="0.001 0.001 0.001"/>
+        </geometry>
+        <material name="joint_black"/>
+      </visual>
+
+      <!-- Simple collision box for lower-leg physics/debugging -->
+      <collision>
+        <origin xyz="0 0 ${-lower_leg_length/2}" rpy="0 0 0"/>
+        <geometry>
+          <box size="${lower_leg_width} ${lower_leg_depth} ${lower_leg_length}"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <origin xyz="0 0 ${-lower_leg_length/2}" rpy="0 0 0"/>
+        <mass value="0.45"/>
+        <inertia
+          ixx="0.002"
+          ixy="0.0"
+          ixz="0.0"
+          iyy="0.002"
+          iyz="0.0"
+          izz="0.0005"/>
+      </inertial>
+
+    </link>
+
+    <!--
+      Knee joint:
+      STEP-derived lower-leg placement relative to the upper-leg/male-panel reference.
+
+      This is the key correction:
+      - Y = +0.006302 m moves the lower assembly into the thigh-panel center gap.
+      - Z = -0.1775 m places the knee assembly at the correct vertical height.
+      - RPY pitch = -90 deg matches the STEP assembly orientation.
+    -->
+    <joint name="${prefix}_knee_joint" type="revolute">
+      <parent link="${prefix}_upper_leg"/>
+      <child link="${prefix}_lower_leg"/>
+      <origin xyz="0 0.006302 -0.1775" rpy="0 -1.570796 0"/>
+      <axis xyz="0 1 0"/>
+      <limit lower="${knee_lower_limit}" upper="${knee_upper_limit}" effort="20.0" velocity="10.0"/>
+    </joint>
+
+
+    <!-- ========================================================= -->
+    <!-- Foot link                                                 -->
+    <!-- ========================================================= -->
+
+    <link name="${prefix}_foot">
+
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <sphere radius="${foot_radius}"/>
+        </geometry>
+        <material name="foot_blue"/>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <sphere radius="${foot_radius}"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.05"/>
+        <inertia
+          ixx="0.00001"
+          ixy="0.0"
+          ixz="0.0"
+          iyy="0.00001"
+          iyz="0.0"
+          izz="0.00001"/>
+      </inertial>
+
+    </link>
+
+    <!-- Foot placed at visible end of Lower_Leg_V1.stl: 157 mm -->
+    <joint name="${prefix}_foot_joint" type="fixed">
+      <parent link="${prefix}_lower_leg"/>
+      <child link="${prefix}_foot"/>
+      <origin xyz="0 0 -0.157" rpy="0 0 0"/>
+    </joint>
+
+  </xacro:macro>
+
+</robot>

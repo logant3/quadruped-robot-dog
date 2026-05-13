@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<robot name="robot_dog" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find robot_dog_description)/xacro/const.xacro"/>
+  <xacro:include filename="$(find robot_dog_description)/xacro/materials.xacro"/>
+  <xacro:include filename="$(find robot_dog_description)/xacro/leg.xacro"/>
+
+  <!-- Ground/reference frame -->
+  <link name="base_footprint"/>
+
+  <!-- Invisible body frame. No visual box, so it will not intersect the leg. -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="2.0"/>
+      <inertia
+        ixx="0.005"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="0.015"
+        iyz="0.0"
+        izz="0.018"/>
+    </inertial>
+  </link>
+
+  <joint name="base_footprint_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Single front-right test leg -->
+  <xacro:simple_leg
+    prefix="front_right"
+    parent="base_link"
+    x="0.08"
+    y="-0.06"
+    z="0.04"/>
+
+</robot>
