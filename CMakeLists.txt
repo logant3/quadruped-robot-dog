@@ -16,9 +16,9 @@ install(
   PROGRAMS
     scripts/send_leg_pose.py
     scripts/test_leg_motion.py
+    scripts/log_joint_response.py
   DESTINATION lib/${PROJECT_NAME}
 )
-
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   set(ament_cmake_copyright_FOUND TRUE)
